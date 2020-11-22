@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app-svc
+  annotations:
+spec:
+  type: LoadBalancer
+  selector:
+    app: test-app
+  ports:
+    - protocol: TCP
+      port: 60000
+      targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test-app
+  name: test-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - image: us.gcr.io/black-beach-295409/test_app:v.1.1.1
+        imagePullPolicy: Always 
+        name: test-app
+        ports:
+        - containerPort: 5000
